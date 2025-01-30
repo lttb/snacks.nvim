@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.16.1](https://github.com/folke/snacks.nvim/compare/v2.16.0...v2.16.1) (2025-01-30)
+
+
+### Bug Fixes
+
+* **picker.preview:** properly refresh the preview after layout changes. Fixes [#802](https://github.com/folke/snacks.nvim/issues/802) ([47993f9](https://github.com/folke/snacks.nvim/commit/47993f9a809ce13e98c3132d463d5a3002289fd6))
+* **win:** properly handle closing the last window. Fixes [#793](https://github.com/folke/snacks.nvim/issues/793) ([18de5bb](https://github.com/folke/snacks.nvim/commit/18de5bb23898fa2055afee5035c97a2abe4aae6b))
+
 ## [2.16.0](https://github.com/folke/snacks.nvim/compare/v2.15.0...v2.16.0) (2025-01-30)
 
 
