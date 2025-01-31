@@ -15,9 +15,9 @@ Snacks.config.style("blame_line", {
 })
 
 local git_cache = {} ---@type table<string, boolean>
-local function is_git_root(dir)
+local function is_git_root(dir, git_work_tree)
   if git_cache[dir] == nil then
-    git_cache[dir] = (vim.uv or vim.loop).fs_stat(dir .. "/.git") ~= nil
+    git_cache[dir] = ((vim.uv or vim.loop).fs_stat(dir .. "/.git") ~= nil) or (vim.fs.normalize(dir) == git_work_tree)
   end
   return git_cache[dir]
 end
@@ -30,19 +30,21 @@ function M.get_root(path)
   path = path or 0
   path = type(path) == "number" and vim.api.nvim_buf_get_name(path) or path --[[@as string]]
   path = vim.fs.normalize(path)
-  path = path == "" and (vim.uv or vim.loop).cwd() .. "/foo" or path
+  path = (path == "" and (vim.uv or vim.loop).cwd() or path) .. "/foo"
   -- check cache first
   for dir in vim.fs.parents(path) do
     if git_cache[dir] then
       return vim.fs.normalize(dir) or nil
     end
   end
+
+  local git_work_tree = vim.env.GIT_WORK_TREE and vim.fs.normalize(vim.env.GIT_WORK_TREE) or nil
+
   for dir in vim.fs.parents(path) do
-    if is_git_root(dir) then
+    if is_git_root(dir, git_work_tree) then
       return vim.fs.normalize(dir) or nil
     end
   end
-  return vim.env.GIT_WORK_TREE
 end
 
 --- Show git log for the current line.
